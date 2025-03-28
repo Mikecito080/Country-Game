@@ -1,11 +1,11 @@
 // Firebase Configuración
 const firebaseConfig = {
-  apiKey: "AIzaSyAN-E7rUdIUAcT2QCJzCPq_-q4Rw7CAg8Q",
-  authDomain: "actividadbd-957ed.firebaseapp.com",
-  projectId: "actividadbd-957ed",
-  storageBucket: "actividadbd-957ed.firebasestorage.app",
-  messagingSenderId: "414336258150",
-  appId: "1:414336258150:web:5fcd9edf86cba2a65c1da7"
+  apiKey: "AIzaSyDDlwzVhlbtZWfN2FEfdeOcPCEmKmU4b8g",
+  authDomain: "crud-8a6f6.firebaseapp.com",
+  projectId: "crud-8a6f6",
+  storageBucket: "crud-8a6f6.firebasestorage.app",
+  messagingSenderId: "724512651895",
+  appId: "1:724512651895:web:c5e7d2e912bf51aaa9a472"
 };
 
 // Array de banderas y opciones
