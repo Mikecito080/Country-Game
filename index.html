@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego y CRUD con Firestore</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <h1>Juego de Banderas</h1>
+
+    <!-- Sección de registro de usuario -->
+    <div id="user-container">
+      <h2>Registrar Usuario</h2>
+      <input type="text" id="username" placeholder="Nombre de usuario">
+      <button id="register">Registrar</button>
+    </div>
+
+    <br><hr><br>
+
+    <!-- Sección del juego -->
+    <div id="game-container">
+      <img id="flag" src="" alt="Bandera">
+      <div id="options"></div>
+      <p id="message"></p>
+    </div>
+
+    <!-- Sección del CRUD -->
+    <h1>CRUD con Firestore</h1>
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="email" id="email" placeholder="Email">
+    <button id="agregar">Agregar Usuario</button>
+    <ul id="listado"></ul>
+    <input type="text" id="nombreEdit" placeholder="Editar Nombre">
+    <input type="email" id="emailEdit" placeholder="Editar Email">
+    <button id="guardar">Guardar Cambios</button>
+
+    <script type="module" src="app.js"></script>
+  </div>
+</body>
+</html>
