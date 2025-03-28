@@ -16,29 +16,3 @@ img {
     max-width: 300px;
     margin-bottom: 10px;
 }
-
-button {
-    margin: 5px;
-    padding: 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #218838;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    margin: 5px 0;
-    padding: 10px;
-    background: #ddd;
-    border-radius: 5px;
-}

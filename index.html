@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juego y CRUD con Firestore</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Juego de Banderas</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
@@ -26,17 +26,13 @@
       <p id="message"></p>
     </div>
 
-    <!-- Sección del CRUD -->
-    <h1>CRUD con Firestore</h1>
-    <input type="text" id="nombre" placeholder="Nombre">
-    <input type="email" id="email" placeholder="Email">
-    <button id="agregar">Agregar Usuario</button>
-    <ul id="listado"></ul>
-    <input type="text" id="nombreEdit" placeholder="Editar Nombre">
-    <input type="email" id="emailEdit" placeholder="Editar Email">
-    <button id="guardar">Guardar Cambios</button>
-
-    <script type="module" src="app.js"></script>
+    <!-- Sección de records -->
+    <div id="records-container">
+      <h2>Records</h2>
+      <ul id="records"></ul>
+    </div>
   </div>
+
+  <script src="app.js"></script>
 </body>
 </html>

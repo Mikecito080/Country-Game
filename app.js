@@ -1,38 +1,38 @@
-// Importa Firebase y Firestore
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-
-// Configuración de Firebase
+// Firebase Configuración
 const firebaseConfig = {
-    apiKey: "AIzaSyDDlwzVhlbtZWfN2FEfdeOcPCEmKmU4b8g",
-    authDomain: "crud-8a6f6.firebaseapp.com",
-    projectId: "crud-8a6f6",
-    storageBucket: "crud-8a6f6.firebasestorage.app",
-    messagingSenderId: "724512651895",
-    appId: "1:724512651895:web:c5e7d2e912bf51aaa9a472"
-  };
+  apiKey: "AIzaSyAN-E7rUdIUAcT2QCJzCPq_-q4Rw7CAg8Q",
+  authDomain: "actividadbd-957ed.firebaseapp.com",
+  projectId: "actividadbd-957ed",
+  storageBucket: "actividadbd-957ed.firebasestorage.app",
+  messagingSenderId: "414336258150",
+  appId: "1:414336258150:web:5fcd9edf86cba2a65c1da7"
+};
 
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Variables de juego
+// Array de banderas y opciones
 const flags = [
-  { src: "colombia.png", country: "Colombia", options: ["Colombia", "Vanuatu", "Mozambique", "Nepal"] },
-  { src: "brasil.png", country: "Brazil", options: ["Brazil", "Bhutan", "Eswatini", "Togo"] }
+  { src: "colombia.png", country: "Colombia", options: ["Colombia", "Vanuatu", "Mozambique", "Nepal", "Kiribati", "Djibouti", "Malta", "Suriname"] },
+  { src: "brasil.png", country: "Brazil", options: ["Brazil", "Bhutan", "Eswatini", "Togo", "Tuvalu", "Lesotho", "Zambia", "Andorra"] },
+  { src: "kiribati.png", country: "Kiribati", options: ["Kiribati", "Togo", "Tuvalu", "Suriname", "Malta", "Mozambique", "Nepal", "Vanuatu"] },
+  { src: "djibouti.png", country: "Djibouti", options: ["Djibouti", "Colombia", "Lesotho", "Zambia", "Andorra", "Bhutan", "Eswatini", "Brazil"] },
+  { src: "nepal.png", country: "Nepal", options: ["Nepal", "Malta", "Kiribati", "Mozambique", "Vanuatu", "Djibouti", "Tuvalu", "Suriname"] },
+  { src: "vanuatu.png", country: "Vanuatu", options: ["Vanuatu", "Colombia", "Djibouti", "Brazil", "Lesotho", "Bhutan", "Mozambique", "Nepal"] },
+  { src: "mozambique.png", country: "Mozambique", options: ["Mozambique", "Nepal", "Kiribati", "Djibouti", "Vanuatu", "Malta", "Tuvalu", "Brazil"] },
+  { src: "tuvalu.png", country: "Tuvalu", options: ["Tuvalu", "Suriname", "Djibouti", "Lesotho", "Zambia", "Brazil", "Nepal", "Vanuatu"] }
 ];
 
+// Variables globales
 let currentFlagIndex = 0;
-let attempts = 3;
+let attempts = 3; // Límite de intentos
 
+// Función para cargar una bandera
 function loadFlag() {
   const flagElement = document.getElementById("flag");
   const optionsContainer = document.getElementById("options");
   const currentFlag = flags[currentFlagIndex];
-
-  flagElement.src = currentFlag.src;
-  optionsContainer.innerHTML = "";
-
+  
+  flagElement.src = currentFlag.src; // Establecer la imagen de la bandera
+  optionsContainer.innerHTML = ""; // Limpiar opciones anteriores
+  
   currentFlag.options.forEach(option => {
     const button = document.createElement("button");
     button.textContent = option;
@@ -41,111 +41,34 @@ function loadFlag() {
   });
 }
 
+// Función para verificar la respuesta del jugador
 function checkAnswer(selectedOption) {
   const message = document.getElementById("message");
   const correctCountry = flags[currentFlagIndex].country;
 
   if (selectedOption === correctCountry) {
     message.textContent = "¡Correcto!";
-    currentFlagIndex = (currentFlagIndex + 1) % flags.length;
-    attempts = 3;
-    loadFlag();
+    currentFlagIndex = (currentFlagIndex + 1) % flags.length; // Cambiar a la siguiente bandera
+    attempts = 3; // Reiniciar intentos al acertar
+    loadFlag(); // Cargar la siguiente bandera
   } else {
-    attempts--;
+    attempts--; // Reducir intentos al fallar
     if (attempts > 0) {
-      message.textContent = `Incorrecto, te quedan ${attempts} intentos.`;
+      message.textContent = `Incorrecto. Te quedan ${attempts} intentos.`;
     } else {
-      message.textContent = "¡Se acabaron tus intentos!";
-      disableGame();
+      message.textContent = "¡Se acabaron tus intentos! Fin del juego.";
+      disableGame(); // Finalizar el juego
     }
   }
 }
 
+// Función para deshabilitar el juego
 function disableGame() {
-  document.getElementById("options").innerHTML = "";
+  const optionsContainer = document.getElementById("options");
+  optionsContainer.innerHTML = ""; // Eliminar botones
+  const flagElement = document.getElementById("flag");
+  flagElement.src = ""; // Ocultar la imagen de la bandera
 }
 
-// Cargar la primera bandera
+// Inicializar el juego cargando la primera bandera
 loadFlag();
-
-// CRUD de usuarios
-const nombreInput = document.getElementById("nombre");
-const emailInput = document.getElementById("email");
-const agregarBtn = document.getElementById("agregar");
-const listado = document.getElementById("listado");
-const nombreEdit = document.getElementById("nombreEdit");
-const emailEdit = document.getElementById("emailEdit");
-const guardarBtn = document.getElementById("guardar");
-let idEdicion = null;
-
-agregarBtn.addEventListener("click", async () => {
-  const nombre = nombreInput.value;
-  const email = emailInput.value;
-
-  if (nombre && email) {
-    try {
-      await addDoc(collection(db, "usuarios"), { nombre, email });
-      nombreInput.value = "";
-      emailInput.value = "";
-      cargarUsuarios();
-    } catch (e) {
-      console.error("Error agregando usuario: ", e);
-    }
-  }
-});
-
-const cargarUsuarios = async () => {
-  const querySnapshot = await getDocs(collection(db, "usuarios"));
-  listado.innerHTML = "";
-  querySnapshot.forEach((doc) => {
-    const usuario = doc.data();
-    const li = document.createElement("li");
-    li.textContent = `${usuario.nombre} - ${usuario.email}`;
-    const btnEditar = document.createElement("button");
-    btnEditar.textContent = "Editar";
-    const btnEliminar = document.createElement("button");
-    btnEliminar.textContent = "Eliminar";
-
-    btnEditar.addEventListener("click", () => editarUsuario(doc.id, usuario));
-    btnEliminar.addEventListener("click", () => eliminarUsuario(doc.id));
-
-    li.appendChild(btnEditar);
-    li.appendChild(btnEliminar);
-    listado.appendChild(li);
-  });
-};
-
-const editarUsuario = (id, usuario) => {
-  idEdicion = id;
-  nombreEdit.value = usuario.nombre;
-  emailEdit.value = usuario.email;
-};
-
-guardarBtn.addEventListener("click", async () => {
-  const nombre = nombreEdit.value;
-  const email = emailEdit.value;
-
-  if (nombre && email && idEdicion) {
-    try {
-      const usuarioRef = doc(db, "usuarios", idEdicion);
-      await updateDoc(usuarioRef, { nombre, email });
-      nombreEdit.value = "";
-      emailEdit.value = "";
-      idEdicion = null;
-      cargarUsuarios();
-    } catch (e) {
-      console.error("Error actualizando usuario: ", e);
-    }
-  }
-});
-
-const eliminarUsuario = async (id) => {
-  try {
-    await deleteDoc(doc(db, "usuarios", id));
-    cargarUsuarios();
-  } catch (e) {
-    console.error("Error eliminando usuario: ", e);
-  }
-};
-
-cargarUsuarios();
