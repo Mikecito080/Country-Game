@@ -8,21 +8,27 @@ const firebaseConfig = {
   appId: "1:724512651895:web:c5e7d2e912bf51aaa9a472"
 };
 
-// Array de banderas y opciones
-const flags = [
-  { src: "colombia.png", country: "Colombia", options: ["Colombia", "Vanuatu", "Mozambique", "Nepal", "Kiribati", "Djibouti", "Malta", "Suriname"] },
-  { src: "brasil.png", country: "Brazil", options: ["Brazil", "Bhutan", "Eswatini", "Togo", "Tuvalu", "Lesotho", "Zambia", "Andorra"] },
-  { src: "kiribati.png", country: "Kiribati", options: ["Kiribati", "Togo", "Tuvalu", "Suriname", "Malta", "Mozambique", "Nepal", "Vanuatu"] },
-  { src: "djibouti.png", country: "Djibouti", options: ["Djibouti", "Colombia", "Lesotho", "Zambia", "Andorra", "Bhutan", "Eswatini", "Brazil"] },
-  { src: "nepal.png", country: "Nepal", options: ["Nepal", "Malta", "Kiribati", "Mozambique", "Vanuatu", "Djibouti", "Tuvalu", "Suriname"] },
-  { src: "vanuatu.png", country: "Vanuatu", options: ["Vanuatu", "Colombia", "Djibouti", "Brazil", "Lesotho", "Bhutan", "Mozambique", "Nepal"] },
-  { src: "mozambique.png", country: "Mozambique", options: ["Mozambique", "Nepal", "Kiribati", "Djibouti", "Vanuatu", "Malta", "Tuvalu", "Brazil"] },
-  { src: "tuvalu.png", country: "Tuvalu", options: ["Tuvalu", "Suriname", "Djibouti", "Lesotho", "Zambia", "Brazil", "Nepal", "Vanuatu"] }
-];
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 // Variables globales
 let currentFlagIndex = 0;
-let attempts = 3; // Límite de intentos
+let attempts = 3;
+let score = 0;
+let username = "";
+
+// Función para registrar usuario
+const registerButton = document.getElementById("register");
+registerButton.addEventListener("click", () => {
+  const input = document.getElementById("username");
+  if (input.value.trim() !== "") {
+    username = input.value.trim();
+    alert(`Usuario registrado: ${username}`);
+  } else {
+    alert("Por favor, ingrese un nombre de usuario.");
+  }
+});
 
 // Función para cargar una bandera
 function loadFlag() {
@@ -30,8 +36,8 @@ function loadFlag() {
   const optionsContainer = document.getElementById("options");
   const currentFlag = flags[currentFlagIndex];
   
-  flagElement.src = currentFlag.src; // Establecer la imagen de la bandera
-  optionsContainer.innerHTML = ""; // Limpiar opciones anteriores
+  flagElement.src = currentFlag.src;
+  optionsContainer.innerHTML = "";
   
   currentFlag.options.forEach(option => {
     const button = document.createElement("button");
@@ -41,34 +47,51 @@ function loadFlag() {
   });
 }
 
-// Función para verificar la respuesta del jugador
+// Función para verificar la respuesta
 function checkAnswer(selectedOption) {
   const message = document.getElementById("message");
   const correctCountry = flags[currentFlagIndex].country;
 
   if (selectedOption === correctCountry) {
     message.textContent = "¡Correcto!";
-    currentFlagIndex = (currentFlagIndex + 1) % flags.length; // Cambiar a la siguiente bandera
-    attempts = 3; // Reiniciar intentos al acertar
-    loadFlag(); // Cargar la siguiente bandera
+    score += 10;
+    currentFlagIndex = (currentFlagIndex + 1) % flags.length;
+    attempts = 3;
+    loadFlag();
   } else {
-    attempts--; // Reducir intentos al fallar
+    attempts--;
     if (attempts > 0) {
       message.textContent = `Incorrecto. Te quedan ${attempts} intentos.`;
     } else {
       message.textContent = "¡Se acabaron tus intentos! Fin del juego.";
-      disableGame(); // Finalizar el juego
+      saveRecord();
+      disableGame();
     }
+  }
+}
+
+// Función para guardar el record en Firebase
+function saveRecord() {
+  if (username !== "") {
+    db.collection("records").add({
+      username: username,
+      score: score,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      alert("Record guardado exitosamente.");
+    })
+    .catch(error => {
+      console.error("Error al guardar el record: ", error);
+    });
   }
 }
 
 // Función para deshabilitar el juego
 function disableGame() {
-  const optionsContainer = document.getElementById("options");
-  optionsContainer.innerHTML = ""; // Eliminar botones
-  const flagElement = document.getElementById("flag");
-  flagElement.src = ""; // Ocultar la imagen de la bandera
+  document.getElementById("options").innerHTML = "";
+  document.getElementById("flag").src = "";
 }
 
-// Inicializar el juego cargando la primera bandera
+// Inicializar juego
 loadFlag();
